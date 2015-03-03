@@ -1,4 +1,20 @@
-# Minimal Dart Webapp
+# ContactProjet
+
+Application web pour les contacts, projet de l'éxercice numéro 6
+ Utilisation de Dartlero et local storage.
+ 
+ 
+ AUTEUR: El Hassen Dia
+ 
+ Numéro Etudiant:  111 073 895
+ 
+ Email ulaval: el-hassen.dia.1@ulaval.ca
+ 
+ 
+
+
+
+
 
 A starting point for a webapp built with Dart. This template
 is recommended if you don't want to, or
