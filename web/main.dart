@@ -73,10 +73,10 @@ class ContactForm {
 
     //evenement bouton add new Contact
     addButton.onClick.listen((e) {
-      Contact c = new Contact();
-      c.name = nom.value;
-      c.email = email.value;
-      c.phone = telephone.value;
+      Contact c = new Contact()
+                ..name = nom.value
+                ..email = email.value
+                ..phone = telephone.value;
       //verifier si l'email existe
       if (contacts.find(c.email) != null) {
         var msg = querySelector('#out').text = "This email exist!";
@@ -99,10 +99,10 @@ class ContactForm {
         row.children[0].text = nom.value;
         //  row.children[1].text = email.value;
         row.children[2].text = telephone.value;
-        Contact c = new Contact();
-        c.name = nom.value;
-        c.email = email.value;
-        c.phone = telephone.value;
+        Contact c = new Contact()
+        ..name = nom.value
+        ..email = email.value
+        ..phone = telephone.value;
         table.updateContact(contacts, c);
       } catch (exception, stackTrace) {
         var msg = querySelector('#out').text = "Please select a row";
@@ -136,10 +136,10 @@ void main() {
 
 
   if (window.localStorage['contacts'].isEmpty) {
-    Contact c = new Contact();
-    c.name = "las";
-    c.email = "dia";
-    c.phone = "587878";
+    Contact c = new Contact()
+    ..name = "las"
+    ..email = "dia"
+    ..phone = "587878";
     contacts.add(c);
     window.localStorage['contacts'] = JSON.encode(contacts.toJson());
 
