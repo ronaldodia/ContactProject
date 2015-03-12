@@ -11,225 +11,145 @@ import 'package:ContactProject/ContactLibrairies.dart';
 import 'dart:convert';
 
 
-class ContactForm{
-  
-  
+class ContactForm {
+
+
   TableElement contactTable;
-  InputElement nom=new InputElement();
-  InputElement search_input=new InputElement();
-  InputElement email=new InputElement();
-  InputElement telephone=new InputElement();
- 
-  UListElement listContact=new UListElement();
-  ButtonElement addButton=new ButtonElement();
-  ButtonElement loadButton=new ButtonElement();
-  ButtonElement updateButton=new ButtonElement();
-  ButtonElement deleteButton=new ButtonElement();
-ContactForm(Contacts contacts){
+  InputElement nom = new InputElement();
+  InputElement search_input = new InputElement();
+  InputElement email = new InputElement();
+  InputElement telephone = new InputElement();
+
+  UListElement listContact = new UListElement();
+  ButtonElement addButton = new ButtonElement();
+  ButtonElement loadButton = new ButtonElement();
+  ButtonElement updateButton = new ButtonElement();
+  ButtonElement clearButton = new ButtonElement();
   
-  ContactTable table= new ContactTable();
-  
-  contacts.fromJson(JSON.decode(window.localStorage['contacts']));
-  contacts.forEach((f)=>table.addRowData(f.name, f.email, f.phone));
-        
-   deleteButton=document.querySelector('#delete');
-   nom=querySelector('#name-input');
-   search_input=querySelector('#name');
-   email=querySelector('#email-input');
-   telephone=querySelector('#phone-input');
-   listContact=querySelector('#list-contact');
-   addButton=querySelector('#add-button');
- loadButton=querySelector('#load-button');
- 
+  //debut du constructeur
+  ContactForm(Contacts contacts) {
 
- 
- //table
-  
-   
- 
- //fin table
- 
- 
-search_input.onChange.listen((e){
-  var rows = '${tableBegin}';
-      Contacts lst=new Contacts();
-      lst=contacts.select((f)=>f.onName(search_input.value));
-     
-         rows = '${rows}${trBegin}';
-         lst.forEach((f){rows = '${rows}${td(f.name)}';
-         rows = '${rows}${td(f.email)}';
-         rows = '${rows}${td(f.phone)}';
-         rows='${rows}${trEnd}';}
-         );
-         rows = '${rows}${trEnd}';
-       
-       
-       rows = '${rows}${tableEnd}';
-       document.querySelector('#table').innerHtml =rows;
-       document.querySelector('#table').innerHtml = tableString(lst);
-  
-});
+    ContactTable table = new ContactTable();
+
+    table.loadContacts(contacts);
+    contacts.forEach((f) => table.addRowData(f.name, f.email, f.phone));
 
 
-/*loadButton.onClick.listen((e) {
-print("load");
-contacts.clear();
-    contacts.fromJson(JSON.decode(window.localStorage['contacts']));
-    contacts.forEach((note) => note.name);
-   print(contacts.length);
-   document.querySelector('#table').innerHtml = table(contacts);
-  
-});*/
-
-addButton.onClick.listen((e){
-  
-  
-  Contact c =new Contact();
-     c.name=nom.value;
-       c.email=email.value;
-       c.phone=telephone.value;
-  contacts.add(c);
-  
-  
-  window.localStorage['contacts'] = JSON.encode(contacts.toJson());
- 
-  //querySelector("#out").text="contact number"+contacts.length.toString();
- // document.querySelector('#table').innerHtml = table(contacts);
-});
+    nom = querySelector('#name-input');
+    search_input = querySelector('#name');
+    email = querySelector('#email-input');
+    telephone = querySelector('#phone-input');
+    clearButton = querySelector('#clear');
+    addButton = querySelector('#add-button');
+    updateButton = querySelector('#update');
 
 
 
+    //evenement pour la recherche
+    search_input.onChange.listen((e) {
+      var rows = '${table.tableBegin}';
+      Contacts lst = new Contacts();
+      lst = contacts.select((f) => f.onName(search_input.value));
 
+      rows = '${rows}${table.trBegin}';
+      lst.forEach((f) {
+        rows = '${rows}${table.td(f.name)}';
+        rows = '${rows}${table.td(f.email)}';
+        rows = '${rows}${table.td(f.phone)}';
+        rows = '${rows}${table.trEnd}';
+      });
+      rows = '${rows}${table.trEnd}';
+      rows = '${rows}${table.tableEnd}';
+      document.querySelector('#table').innerHtml = rows;
+      document.querySelector('#table').innerHtml = table.tableString(lst);
 
+    });
 
-}
+    //evenement bouton clearAll
+    clearButton.onClick.listen((e) {
+      table.clearContacts(contacts);
+      table.loadContacts(contacts);
+    });
 
+    //evenement bouton add new Contact
+    addButton.onClick.listen((e) {
+      Contact c = new Contact();
+      c.name = nom.value;
+      c.email = email.value;
+      c.phone = telephone.value;
+      //verifier si l'email existe
+      if (contacts.find(c.email) != null) {
+        var msg = querySelector('#out').text = "This email exist!";
 
+      } else {
+        contacts.add(c);
+        table.saveContacts(contacts);
+        table.loadContacts(contacts);
+        table.addRowData(c.name, c.email, c.phone);
+      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
-String description() {
-  return '''
-    <p>
-      The following links are learning resources.
-    </p>
-  ''';
-}
-
-
-var tableBegin = '''
-  <table border=1>
-    <caption>Title</caption>
-    <tr>
-      <th>Nom</th>
-      <th>Email</th>
-      <th>Telephone</th>
-
-    </tr>
-''';
-
-var tableEnd = '''
-  </table>
-''';
-
-var trBegin = '''
-    <tr>
-''';
-
-var trEnd = '''
-  </tr>
-''';
-
-String td(String attribut) {
-  
-  return '''
-      <td>${attribut}</td>
-  ''';
-}
-
-
-String tableString(Contacts contacts) {
-   var rows = '${tableBegin}';
-  String updatechaine="";
-  int i=0;
-     rows = '${rows}${trBegin}';
-     contacts.forEach((f){rows = '${rows}${td(f.name)}';
-     
-     rows = '${rows}${td(f.email)}';
-     rows = '${rows}${td(f.phone)}';
-     
-     rows='${rows}${trEnd}';
-     
-     i++;}
-     );
+    });
     
-     rows = '${rows}${trEnd}';
-   
-   
-   rows = '${rows}${tableEnd}';
-   print(rows);
-   return rows;
- }
+    //evenement update contact
+    updateButton.onClick.listen((e) {
+
+
+      var row = table.findRow(email.value);
+      try {
+        row.children[0].text = nom.value;
+        //  row.children[1].text = email.value;
+        row.children[2].text = telephone.value;
+        Contact c = new Contact();
+        c.name = nom.value;
+        c.email = email.value;
+        c.phone = telephone.value;
+        table.updateContact(contacts, c);
+      } catch (exception, stackTrace) {
+        var msg = querySelector('#out').text = "Please select a row";
+      }
+    });
+
+  }
+
+}
+//fin de la classe
+
+
+
+
 
 
 void main() {
   ContactModel contactModel = new ContactModel();
-     Contacts contacts = contactModel.contacts;
-     
+  Contacts contacts = contactModel.contacts;
+
   initNavMenu();
 
 
   // Webapps need routing to listen for changes to the URL.
   var router = new Router();
   router.root
-    ..addRoute(name: 'ajout', path: '/ajout', enter: showAbout)
-    ..addRoute(name: 'home', defaultRoute: true, path: '/', enter: showHome);
+      ..addRoute(name: 'ajout', path: '/ajout', enter: showAbout)
+      ..addRoute(name: 'home', defaultRoute: true, path: '/', enter: showHome);
   router.listen();
-  
-  
-  
-  //contacts.clear();
-  //initialiser la classe
-// Contact c =new Contact();
-//   c.name="las";
-//     c.email="dia";
-//     c.phone="587878";
-//    Contact c2=new Contact();
-//         c2.name="libarjrjrj2";
-//         c2.email="dia@hh";
-//         c2.phone="65564456";
-//         //contacts.add(c);
-//         //
-//         contacts.add(c2);
-//         Contact c3=new  Contact();
-//         c3.name="alassane dia  ";
-//                 c3.email="dia@yahoo.fr";
-//                 c3.phone="000000";
-//                // contacts.add(c3);
-//  //debut du table
- 
-  new ContactForm(contacts);
-  
+
+
+
+  if (window.localStorage['contacts'].isEmpty) {
+    Contact c = new Contact();
+    c.name = "las";
+    c.email = "dia";
+    c.phone = "587878";
+    contacts.add(c);
+    window.localStorage['contacts'] = JSON.encode(contacts.toJson());
+
+
+  }
+
+
   contacts.clear();
-  contacts.fromJson(JSON.decode(window.localStorage['contacts']));
-     
-//  document.querySelector('#table').innerHtml = table(contacts); 
- 
+  new ContactForm(contacts);
+
 }
 
 void showAbout(RouteEvent e) {
@@ -242,7 +162,6 @@ void showHome(RouteEvent e) {
   querySelector('#home').style.display = '';
   querySelector('#ajout').style.display = 'none';
 }
-
 
 
 
