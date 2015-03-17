@@ -1,0 +1,11 @@
+ex06
+
+20/20
+
+voir https://www.dartlang.org/articles/style-guide/
+ContactEntities.dart --> contact_entities.dart
+attention au formatage
+
+
+
+
